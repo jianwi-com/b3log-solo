@@ -75,18 +75,6 @@
                 <div class="navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="${servePath}">
-                        <i class="icon-home"></i>
-                        </a>
-                    </li>
-                    <#list pageNavigations as page>
-                    <li>
-                        <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
-                            ${page.pageTitle}
-                        </a>
-                    </li>
-                    </#list>
-                    <li>
                         <a href="${servePath}/tags.html" rel="section">
                             ${allTagsLabel}
                         </a>
@@ -96,28 +84,44 @@
                             ${archiveLabel}
                         </a>
                     </li>
+                    <#list pageNavigations as page>
+                    <li>
+                      <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
+                          ${page.pageTitle}
+                      </a>
+                    </li>
+                    </#list>
+                    <li>
+                      <a rel="archive" href="${servePath}/links.html">
+                        <i class="icon-link"></i> ${linkLabel}
+                      </a>
+                    </li>
                     <#if isLoggedIn>
                         <li>
                         <a href="${servePath}/admin-index.do#main" title="${adminLabel}">
                             ${adminLabel}
                         </a>
                         </li>
+                        <!--
                         <li>
                         <a href="${logoutURL}">
                             ${logoutLabel}
                         </a>
                         </li>
+                        -->
                         <#else>
                         <li>
                         <a href="${loginURL}">
                             ${loginLabel}
                         </a>
                         </li>
+                        <!--
                         <li>
                         <a href="${servePath}/register">
                             ${registerLabel}
                         </a>
                         </li>
+                        -->
                     </#if>
                     </ul>
                 </div>

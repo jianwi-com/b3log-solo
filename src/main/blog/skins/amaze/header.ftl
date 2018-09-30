@@ -18,13 +18,6 @@
     <div id="huxblog_navbar">
       <div class="navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <#list pageNavigations as page>
-          <li>
-            <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
-                ${page.pageTitle}
-            </a>
-          </li>
-          </#list>
           <li>
             <a href="${servePath}/tags.html" rel="section">
                 ${allTagsLabel}
@@ -35,33 +28,44 @@
                 ${archiveLabel}
             </a>
           </li>
+          <#list pageNavigations as page>
+          <li>
+            <a href="${page.pagePermalink}" target="${page.pageOpenTarget}" rel="section">
+                ${page.pageTitle}
+            </a>
+          </li>
+          </#list>
           <li>
             <a rel="archive" href="${servePath}/links.html">
               <i class="icon-link"></i> ${linkLabel}
             </a>
           </li>
           <#if isLoggedIn>
-            <li>
-              <a href="${servePath}/admin-index.do#main" title="${adminLabel}">
-                ${adminLabel}
-              </a>
-            </li>
-            <li>
-              <a href="${logoutURL}">
-                ${logoutLabel}
-              </a>
-            </li>
-              <#else>
-            <li>
-              <a href="${loginURL}">
-                ${loginLabel}
-              </a>
-            </li>
-            <li>
-              <a href="${servePath}/register">
-                ${registerLabel}
-              </a>
-            </li>
+          <li>
+            <a href="${servePath}/admin-index.do#main" title="${adminLabel}">
+              ${adminLabel}
+            </a>
+          </li>
+          <!--
+          <li>
+            <a href="${logoutURL}">
+              ${logoutLabel}
+            </a>
+          </li>
+          -->
+          <#else>
+          <li>
+            <a href="${loginURL}">
+              ${loginLabel}
+            </a>
+          </li>
+          <!--
+          <li>
+            <a href="${servePath}/register">
+              ${registerLabel}
+            </a>
+          </li>
+          -->
           </#if>
         </ul>
       </div>
@@ -70,7 +74,7 @@
   </div>
   <!-- /.container -->
 </nav>
-<header class="intro-header" style="background-image: url('/skins/${skinDirName}/images/header.jpg')">
+<header class="intro-header" style="background-image: url('/skins/${skinDirName}/images/header.jpg'); background-size: 1920px 650px; background-position: center -268px;">
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -78,7 +82,7 @@
           <h1>
           </h1>
           <!-- <hr class="small"> -->
-          <span class="subheading">
+          <span class="subheading" style="margin-top: -38px; margin-bottom: 38px;">
             ${blogSubtitle}
           </span>
         </div>

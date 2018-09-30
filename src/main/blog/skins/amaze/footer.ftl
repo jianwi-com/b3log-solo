@@ -21,12 +21,12 @@
     <div class="blog-text-center">
         &copy; ${year}
         ${footerContent}
-        <a href="${servePath}">${blogTitle}</a>  &nbsp;   • &nbsp;
-        <a href="https://solo.b3log.org" target="_blank">Solo</a> ${version}  <br/>
-
-        Powered by <a href="https://b3log.org" target="_blank">B3log</a> 开源 &nbsp;
-        <span class="ft-warn">&heartsuit;</span>
-        Theme <a rel="friend" href="https://github.com/spiritree/typecho-theme-amaze" target="_blank"> Amaze</a> by <a href="https://github.com/spiritree" target="_blank">spiritree</a> & <a href="https://github.com/zjhch123" target="_blank">Jiahao.Zhang</a>
+        <a href="${servePath}">${blogTitle}</a>
+        <br/>
+        <span class="ft-warn">&hearts;</span>
+        <a href="mailto:i@jianwi.com">Denghui.Zhou</a> &nbsp; 
+        <span class="ft-warn">&reg;</span>
+        <a href="https://github.com/jianwi-com" target="_blank">jianwi-com</a>
     </div>
 </footer>
 <div class="icon-up" onclick="Util.goTop()"></div>

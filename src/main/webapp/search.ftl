@@ -102,13 +102,20 @@
         </#if>
     </nav>
 <#else>
-No Result, Return to <a href="${servePath}">Index</a> or <a href="https://hacpai.com">HacPai</a>.
+没有找到结果，请返回<a href="${servePath}">首页</a>.
 </#if>
 </div>
 
 <div class="footerWrapper">
     <div class="footer">
-        Powered by <a href="https://b3log.org" target="_blank">B3log 开源</a> • Solo ${version}
+        &copy; ${year}
+        ${footerContent}
+        <a href="${servePath}">${blogTitle}</a>
+        <br/>
+        <span class="ft-warn">&hearts;</span>
+        <a href="mailto:i@jianwi.com">Denghui.Zhou</a> &nbsp; 
+        <span class="ft-warn">&reg;</span>
+        <a href="https://github.com/jianwi-com" target="_blank">jianwi-com</a>
     </div>
 </div>
 </body>
