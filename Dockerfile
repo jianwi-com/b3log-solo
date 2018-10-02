@@ -3,6 +3,7 @@ LABEL maintainer="Tomaer Ma<i@tomaer.com>"
 
 WORKDIR /opt/b3log/solo
 ADD . /tmp
+ADD . /opt/solo-src
 
 RUN cd /tmp && mvn install -Pci && mv target/solo/* /opt/b3log/solo/ \
     && mkdir -p /opt/b3log/backup/ && mkdir -p /opt/b3log/tmp/ \
