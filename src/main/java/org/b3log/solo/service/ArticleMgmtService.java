@@ -454,6 +454,74 @@ public class ArticleMgmtService {
     }
 
     /**
+     * Imports an article from the specified request json object.
+     *
+     * @param requestJSONObject the specified request json object, for example,
+     *                          {
+     *                          "article": {
+     *                          "articleAuthorId": "",
+     *                          "articleTitle": "",
+     *                          "articleAbstract": "",
+     *                          "articleContent": "",
+     *                          "articleTags": "tag1,tag2,tag3",
+     *                          "articleIsPublished": boolean,
+     *                          "articlePermalink": "", // optional
+     *                          "postToCommunity": boolean, // optional, default is true
+     *                          "articleSignId": "" // optional, default is "0",
+     *                          "articleCommentable": boolean,
+     *                          "articleViewPwd": "",
+     *                          "articleEditorType": "", // optional, preference specified if not exists this key
+     *                          "oId": "" // optional, generate it if not exists this key
+     *                          }
+     *                          }
+     * @return generated article id
+     * @throws ServiceException service exception
+     */
+    public String importArticle(final JSONObject requestJSONObject) throws ServiceException {
+        boolean needUpdate = false;
+        final JSONObject updateRequestJSONObject = new JSONObject();
+        String ret = null;
+
+        final Transaction transaction = articleRepository.beginTransaction();
+        try {
+            final JSONObject article = requestJSONObject.getJSONObject(Article.ARTICLE);
+            final String permalink = article.getString(Article.ARTICLE_PERMALINK);
+
+            // 根据permalink，判断是否有旧的文章
+            try {
+                final JSONObject existArticle = articleRepository.getByPermalink(permalink);
+                final String existArticleID = existArticle.getString(Keys.OBJECT_ID);
+                if (existArticleID != null && !existArticleID.isEmpty()) {
+                    article.put(Keys.OBJECT_ID, existArticleID);
+                    updateRequestJSONObject.put(Article.ARTICLE, article);
+                    needUpdate = true;
+                    ret = existArticleID;
+                }
+            } catch (final Exception ex) {
+            }
+
+            // 新增文章
+            if (!needUpdate) {
+                ret = addArticleInternal(article);
+            }
+
+            transaction.commit();
+        } catch (final Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new ServiceException(e.getMessage());
+        }
+
+        // 更新文章
+        if (needUpdate) {
+            updateArticle(updateRequestJSONObject);
+        }
+
+        return ret;
+    }
+
+    /**
      * Adds the specified article for internal invocation purposes.
      *
      * @param article the specified article
@@ -1113,6 +1181,14 @@ public class ArticleMgmtService {
 
         if (PermalinkQueryService.invalidArticlePermalinkFormat(ret)) {
             throw new ServiceException(langPropsService.get("invalidPermalinkFormatLabel"));
+        }
+
+        try {
+            final JSONObject existArticle = articleRepository.getByPermalink(ret);
+            final String existArticleID = existArticle.getString(Keys.OBJECT_ID);
+            removeArticle(existArticleID);
+        } catch (Exception e) {
+            LOGGER.log(Level.ERROR, "Determines whether the permalink[" + ret + "] exists failed, returns true", e);
         }
 
         if (permalinkQueryService.exist(ret)) {

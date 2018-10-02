@@ -77,7 +77,8 @@ public class PermalinkQueryService {
      * @return {@code true} if matches, returns {@code false} otherwise
      */
     public static boolean matchDefaultArticlePermalinkFormat(final String permalink) {
-        final Pattern pattern = Pattern.compile("/articles/\\d{4}/\\d{2}/\\d{2}/\\d+\\.html");
+        // final Pattern pattern = Pattern.compile("/articles/\\d{4}/\\d{2}/\\d{2}/\\d+\\.html");
+        final Pattern pattern = Pattern.compile("/articles/[\\w/-]+\\.html");
         final Matcher matcher = pattern.matcher(permalink);
 
         return matcher.matches();
