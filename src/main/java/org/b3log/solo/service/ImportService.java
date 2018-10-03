@@ -114,7 +114,7 @@ public class ImportService {
                         final JSONObject request = new JSONObject();
                         request.put(Article.ARTICLE, article);
 
-                        // final String id = articleMgmtService.updateArticle(request);
+                        // final String id = articleMgmtService.addArticle(request);
                         final String id = articleMgmtService.importArticle(request);
                         FileUtils.moveFile(md, new File(md.getPath() + "." + id));
                         LOGGER.info("Imported article [" + article.optString(Article.ARTICLE_TITLE) + "]");

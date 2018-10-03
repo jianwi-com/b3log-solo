@@ -479,43 +479,29 @@ public class ArticleMgmtService {
      */
     public String importArticle(final JSONObject requestJSONObject) throws ServiceException {
         boolean needUpdate = false;
-        final JSONObject updateRequestJSONObject = new JSONObject();
         String ret = null;
+        final JSONObject updateRequestJSONObject = new JSONObject();
 
-        final Transaction transaction = articleRepository.beginTransaction();
         try {
             final JSONObject article = requestJSONObject.getJSONObject(Article.ARTICLE);
             final String permalink = article.getString(Article.ARTICLE_PERMALINK);
-
-            // 根据permalink，判断是否有旧的文章
-            try {
-                final JSONObject existArticle = articleRepository.getByPermalink(permalink);
-                final String existArticleID = existArticle.getString(Keys.OBJECT_ID);
-                if (existArticleID != null && !existArticleID.isEmpty()) {
-                    article.put(Keys.OBJECT_ID, existArticleID);
-                    updateRequestJSONObject.put(Article.ARTICLE, article);
-                    needUpdate = true;
-                    ret = existArticleID;
-                }
-            } catch (final Exception ex) {
+            final JSONObject existArticle = articleRepository.getByPermalink(permalink);
+            final String existArticleID = existArticle.getString(Keys.OBJECT_ID);
+            if (existArticleID != null && !existArticleID.isEmpty()) {
+                article.put(Keys.OBJECT_ID, existArticleID);
+                updateRequestJSONObject.put(Article.ARTICLE, article);
+                needUpdate = true;
+                ret = existArticleID;
             }
-
-            // 新增文章
-            if (!needUpdate) {
-                ret = addArticleInternal(article);
-            }
-
-            transaction.commit();
         } catch (final Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw new ServiceException(e.getMessage());
         }
 
-        // 更新文章
         if (needUpdate) {
+            // 更新文章
             updateArticle(updateRequestJSONObject);
+        } else {
+            // 新增文章
+            ret = addArticle(requestJSONObject);
         }
 
         return ret;
@@ -1181,14 +1167,6 @@ public class ArticleMgmtService {
 
         if (PermalinkQueryService.invalidArticlePermalinkFormat(ret)) {
             throw new ServiceException(langPropsService.get("invalidPermalinkFormatLabel"));
-        }
-
-        try {
-            final JSONObject existArticle = articleRepository.getByPermalink(ret);
-            final String existArticleID = existArticle.getString(Keys.OBJECT_ID);
-            removeArticle(existArticleID);
-        } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Determines whether the permalink[" + ret + "] exists failed, returns true", e);
         }
 
         if (permalinkQueryService.exist(ret)) {

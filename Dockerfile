@@ -18,7 +18,7 @@ ADD ./src/main/resources/docker/latke.properties /opt/b3log/tmp
 
 RUN chmod 777 /opt/b3log/solo/entrypoint.sh
 
-VOLUME ["/opt/b3log/backup/", "/opt/b3log/solo/skins/", "/opt/b3log/solo/markdowns/", "/opt/b3log/solo/assets/"]
+VOLUME ["/opt/b3log/backup/", "/opt/b3log/solo/skins/", "/opt/b3log/solo/markdowns/", "/opt/b3log/solo/assets/", "/opt/b3log/solo/log/"]
 
 EXPOSE 8080
 
