@@ -23,10 +23,8 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Strings;
@@ -44,7 +42,6 @@ import org.json.JSONObject;
  * @version 1.0.1.3, Sep 25, 2018
  * @since 0.5.5
  */
-@Named
 @Singleton
 public class B3CommentSender extends AbstractEventListener<JSONObject> {
 
@@ -62,12 +59,12 @@ public class B3CommentSender extends AbstractEventListener<JSONObject> {
     public void action(final Event<JSONObject> event) {
         final JSONObject data = event.getData();
 
-        LOGGER.log(Level.DEBUG, "Processing an event[type={0}, data={1}] in listener[className={2}]",
+        LOGGER.log(Level.DEBUG, "Processing an event [type={0}, data={1}] in listener [className={2}]",
                 event.getType(), data, B3ArticleSender.class.getName());
         try {
             final JSONObject originalComment = data.getJSONObject(Comment.COMMENT);
 
-            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+            final BeanManager beanManager = BeanManager.getInstance();
             final PreferenceQueryService preferenceQueryService = beanManager.getReference(PreferenceQueryService.class);
 
             final JSONObject preference = preferenceQueryService.getPreference();

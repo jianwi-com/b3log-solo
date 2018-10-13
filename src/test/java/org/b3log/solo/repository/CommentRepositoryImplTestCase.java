@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.repository.impl;
+package org.b3log.solo.repository;
 
 import org.b3log.latke.repository.Transaction;
 import org.b3log.solo.AbstractTestCase;
@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * {@link ArticleRepositoryImpl} test case.
+ * {@link ArticleRepository} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Sep 16, 2018

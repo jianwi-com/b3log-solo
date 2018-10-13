@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.repository.impl;
+package org.b3log.solo.repository;
 
 import java.util.List;
 import junit.framework.Assert;
@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 /**
- * {@link TagRepositoryImpl} test case.
+ * {@link TagRepository} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Dec 30, 2011

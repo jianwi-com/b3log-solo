@@ -27,7 +27,7 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
@@ -49,11 +49,7 @@ import org.b3log.solo.model.Common;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.model.Skin;
 import org.b3log.solo.model.UserExt;
-import org.b3log.solo.service.DataModelService;
-import org.b3log.solo.service.ExportService;
-import org.b3log.solo.service.OptionQueryService;
-import org.b3log.solo.service.PreferenceQueryService;
-import org.b3log.solo.service.UserQueryService;
+import org.b3log.solo.service.*;
 import org.b3log.solo.util.Solos;
 import org.json.JSONObject;
 
@@ -73,7 +69,7 @@ import java.util.*;
  * Admin console render processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.7.0.5, Sep 25, 2018
+ * @version 1.7.0.6, Oct 5, 2018
  * @since 0.4.1
  */
 @RequestProcessor
@@ -136,11 +132,12 @@ public class AdminConsole {
     /**
      * Shows administrator index with the specified context.
      *
-     * @param request the specified request
-     * @param context the specified context
+     * @param request  the specified request
+     * @param response the specified response
+     * @param context  the specified context
      */
     @RequestProcessing(value = "/admin-index.do", method = HTTPRequestMethod.GET)
-    public void showAdminIndex(final HttpServletRequest request, final HTTPRequestContext context) {
+    public void showAdminIndex(final HttpServletRequest request, final HttpServletResponse response, final HTTPRequestContext context) {
         final AbstractFreeMarkerRenderer renderer = new ConsoleRenderer();
         context.setRenderer(renderer);
         final String templateName = "admin-index.ftl";
@@ -148,7 +145,7 @@ public class AdminConsole {
         final Map<String, String> langs = langPropsService.getAll(Latkes.getLocale());
         final Map<String, Object> dataModel = renderer.getDataModel();
         dataModel.putAll(langs);
-        final JSONObject currentUser = userQueryService.getCurrentUser(request);
+        final JSONObject currentUser = Solos.getCurrentUser(request, response);
         final String userName = currentUser.optString(User.USER_NAME);
         dataModel.put(User.USER_NAME, userName);
         final String roleName = currentUser.optString(User.USER_ROLE);
@@ -282,7 +279,7 @@ public class AdminConsole {
     @RequestProcessing(value = "/console/export/sql", method = HTTPRequestMethod.GET)
     public void exportSQL(final HttpServletRequest request, final HttpServletResponse response, final HTTPRequestContext context)
             throws Exception {
-        if (!userQueryService.isAdminLoggedIn(request)) {
+        if (!Solos.isAdminLoggedIn(request)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
             return;
@@ -401,7 +398,7 @@ public class AdminConsole {
     @RequestProcessing(value = "/console/export/json", method = HTTPRequestMethod.GET)
     public void exportJSON(final HttpServletRequest request, final HttpServletResponse response, final HTTPRequestContext context)
             throws Exception {
-        if (!userQueryService.isAdminLoggedIn(request)) {
+        if (!Solos.isAdminLoggedIn(request)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
             return;
@@ -451,7 +448,7 @@ public class AdminConsole {
     @RequestProcessing(value = "/console/export/hexo", method = HTTPRequestMethod.GET)
     public void exportHexo(final HttpServletRequest request, final HttpServletResponse response, final HTTPRequestContext context)
             throws Exception {
-        if (!userQueryService.isAdminLoggedIn(request)) {
+        if (!Solos.isAdminLoggedIn(request)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
             return;

@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.repository.impl;
+package org.b3log.solo.repository;
 
 import org.b3log.latke.Keys;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.solo.AbstractTestCase;
 import org.b3log.solo.model.ArchiveDate;
 import org.b3log.solo.model.Article;
-import org.b3log.solo.repository.ArchiveDateArticleRepository;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * {@link ArchiveDateArticleRepositoryImpl} test case.
+ * {@link ArchiveDateArticleRepository} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Dec 31, 2011

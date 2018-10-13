@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.processor;
+package org.b3log.solo.processor.console;
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
@@ -36,7 +36,6 @@ import org.b3log.latke.servlet.renderer.TextHTMLRenderer;
 import org.b3log.solo.model.Article;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.model.Tag;
-import org.b3log.solo.processor.console.ConsoleAuthAdvice;
 import org.b3log.solo.repository.ArticleRepository;
 import org.b3log.solo.repository.TagArticleRepository;
 import org.b3log.solo.repository.TagRepository;
@@ -59,12 +58,12 @@ import java.util.List;
  */
 @RequestProcessor
 @Before(adviceClass = ConsoleAuthAdvice.class)
-public class RepairProcessor {
+public class RepairConsole {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RepairProcessor.class);
+    private static final Logger LOGGER = Logger.getLogger(RepairConsole.class);
 
     /**
      * Mail service.
@@ -75,7 +74,7 @@ public class RepairProcessor {
      * Bean manager.
      */
     @Inject
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     /**
      * Preference query service.

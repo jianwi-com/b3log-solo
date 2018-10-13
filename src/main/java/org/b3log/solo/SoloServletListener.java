@@ -20,8 +20,7 @@ package org.b3log.solo;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
@@ -36,7 +35,6 @@ import org.b3log.solo.event.*;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.model.Skin;
 import org.b3log.solo.repository.OptionRepository;
-import org.b3log.solo.repository.impl.OptionRepositoryImpl;
 import org.b3log.solo.service.*;
 import org.b3log.solo.util.Skins;
 import org.b3log.solo.util.Solos;
@@ -46,7 +44,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import java.util.Set;
 
@@ -54,7 +51,7 @@ import java.util.Set;
  * Solo Servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.9.3.41, Sep 27, 2018
+ * @version 1.9.3.43, Oct 10, 2018
  * @since 0.3.1
  */
 public final class SoloServletListener extends AbstractServletListener {
@@ -67,12 +64,12 @@ public final class SoloServletListener extends AbstractServletListener {
     /**
      * Solo version.
      */
-    public static final String VERSION = "2.9.4";
+    public static final String VERSION = "2.9.5";
 
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
@@ -81,7 +78,7 @@ public final class SoloServletListener extends AbstractServletListener {
         super.contextInitialized(servletContextEvent);
         Stopwatchs.start("Context Initialized");
 
-        beanManager = Lifecycle.getBeanManager();
+        beanManager = BeanManager.getInstance();
 
         // Upgrade check https://github.com/b3log/solo/issues/12040
         final UpgradeService upgradeService = beanManager.getReference(UpgradeService.class);
@@ -93,7 +90,7 @@ public final class SoloServletListener extends AbstractServletListener {
 
         JdbcRepository.dispose();
 
-        final OptionRepository optionRepository = beanManager.getReference(OptionRepositoryImpl.class);
+        final OptionRepository optionRepository = beanManager.getReference(OptionRepository.class);
         final Transaction transaction = optionRepository.beginTransaction();
         try {
             loadPreference();
@@ -145,11 +142,6 @@ public final class SoloServletListener extends AbstractServletListener {
             LOGGER.log(Level.DEBUG, "Request made from a search engine [User-Agent={0}]", httpServletRequest.getHeader("User-Agent"));
             httpServletRequest.setAttribute(Keys.HttpRequest.IS_SEARCH_ENGINE_BOT, true);
         } else {
-            final HttpSession session = httpServletRequest.getSession();
-
-            LOGGER.log(Level.DEBUG, "Gets a session [id={0}, remoteAddr={1}, User-Agent={2}, isNew={3}]", session.getId(),
-                    httpServletRequest.getRemoteAddr(), httpServletRequest.getHeader("User-Agent"), session.isNew());
-            // Online visitor count
             final StatisticMgmtService statisticMgmtService = beanManager.getReference(StatisticMgmtService.class);
             statisticMgmtService.onlineVisitorCount(httpServletRequest);
         }
@@ -195,7 +187,7 @@ public final class SoloServletListener extends AbstractServletListener {
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, e.getMessage(), e);
 
-            throw new IllegalStateException(e);
+            System.exit(-1);
         }
 
         Stopwatchs.end();
@@ -224,8 +216,9 @@ public final class SoloServletListener extends AbstractServletListener {
             final B3CommentSender commentSender = beanManager.getReference(B3CommentSender.class);
             eventManager.registerListener(commentSender);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Register event handlers error", e);
-            throw new IllegalStateException(e);
+            LOGGER.log(Level.ERROR, "Register event handlers failed", e);
+
+            System.exit(-1);
         }
 
         LOGGER.debug("Registered event handlers");

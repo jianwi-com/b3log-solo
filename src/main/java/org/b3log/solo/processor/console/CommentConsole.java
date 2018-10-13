@@ -19,7 +19,7 @@ package org.b3log.solo.processor.console;
 
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
@@ -33,6 +33,7 @@ import org.b3log.latke.util.Requests;
 import org.b3log.solo.model.Comment;
 import org.b3log.solo.service.CommentMgmtService;
 import org.b3log.solo.service.CommentQueryService;
+import org.b3log.solo.util.Solos;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +100,8 @@ public class CommentConsole {
         try {
             final String commentId = request.getRequestURI().substring((Latkes.getContextPath() + "/console/page/comment/").length());
 
-            if (!commentQueryService.canAccessComment(commentId, request)) {
+            final JSONObject currentUser = Solos.getCurrentUser(request, response);
+            if (!commentQueryService.canAccessComment(commentId, currentUser)) {
                 ret.put(Keys.STATUS_CODE, false);
                 ret.put(Keys.MSG, langPropsService.get("forbiddenLabel"));
 
@@ -145,8 +147,8 @@ public class CommentConsole {
 
         try {
             final String commentId = request.getRequestURI().substring((Latkes.getContextPath() + "/console/article/comment/").length());
-
-            if (!commentQueryService.canAccessComment(commentId, request)) {
+            final JSONObject currentUser = Solos.getCurrentUser(request, response);
+            if (!commentQueryService.canAccessComment(commentId, currentUser)) {
                 ret.put(Keys.STATUS_CODE, false);
                 ret.put(Keys.MSG, langPropsService.get("forbiddenLabel"));
 

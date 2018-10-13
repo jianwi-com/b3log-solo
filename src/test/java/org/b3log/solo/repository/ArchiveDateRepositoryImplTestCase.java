@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.repository.impl;
+package org.b3log.solo.repository;
 
 import junit.framework.Assert;
 import org.apache.commons.lang.time.DateUtils;
@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 /**
- * {@link ArchiveDateRepositoryImpl} test case.
+ * {@link ArchiveDateRepository} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Jul 20, 2017

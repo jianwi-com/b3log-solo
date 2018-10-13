@@ -24,7 +24,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
@@ -42,7 +42,9 @@ import org.b3log.solo.repository.ArticleRepository;
 import org.b3log.solo.repository.CommentRepository;
 import org.b3log.solo.repository.PageRepository;
 import org.b3log.solo.repository.UserRepository;
-import org.b3log.solo.util.*;
+import org.b3log.solo.util.Emotions;
+import org.b3log.solo.util.Markdowns;
+import org.b3log.solo.util.Solos;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -56,7 +58,7 @@ import java.util.Date;
  * Comment management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.3.2, Sep 16, 2018
+ * @version 1.3.3.3, Oct 7, 2018
  * @since 0.3.5
  */
 @Service
@@ -252,7 +254,7 @@ public class CommentMgmtService {
     /**
      * Checks the specified comment adding request.
      * <p>
-     * XSS process (name, content) in this method.
+     * XSS process (name) in this method.
      * </p>
      *
      * @param requestJSONObject the specified comment adding request, for example,
@@ -264,7 +266,7 @@ public class CommentMgmtService {
      *                          "commentURL": "",
      *                          "commentContent": "",
      *                          }
-     * @return check result, for example,      <pre>
+     * @return check result, for example, <pre>
      * {
      *     "sc": boolean,
      *     "msg": "" // Exists if "sc" equals to false
@@ -306,7 +308,6 @@ public class CommentMgmtService {
             }
 
             String commentName = requestJSONObject.getString(Comment.COMMENT_NAME);
-
             if (MAX_COMMENT_NAME_LENGTH < commentName.length() || MIN_COMMENT_NAME_LENGTH > commentName.length()) {
                 LOGGER.log(Level.WARN, "Comment name is too long[{0}]", commentName);
                 ret.put(Keys.MSG, langPropsService.get("nameTooLongLabel"));
@@ -343,10 +344,6 @@ public class CommentMgmtService {
 
             ret.put(Keys.STATUS_CODE, true);
 
-            // name XSS process
-            commentName = Jsoup.clean(commentName, Whitelist.none());
-            requestJSONObject.put(Comment.COMMENT_NAME, commentName);
-
             commentContent = Emotions.toAliases(commentContent);
             requestJSONObject.put(Comment.COMMENT_CONTENT, commentContent);
 
@@ -380,8 +377,8 @@ public class CommentMgmtService {
      *     "commentOriginalCommentName": "" // optional, corresponding to argument "commentOriginalCommentId"
      *     "commentThumbnailURL": "",
      *     "commentSharpURL": "",
-     *     "commentContent": "", // processed XSS HTML
-     *     "commentName": "", // processed XSS
+     *     "commentContent": "",
+     *     "commentName": "",
      *     "commentURL": "", // optional
      *     "isReply": boolean,
      *     "page": {},
@@ -513,8 +510,8 @@ public class CommentMgmtService {
      *     "commentOriginalCommentName": "" // optional, corresponding to argument "commentOriginalCommentId"
      *     "commentThumbnailURL": "",
      *     "commentSharpURL": "",
-     *     "commentContent": "", // processed XSS HTML
-     *     "commentName": "", // processed XSS
+     *     "commentContent": "",
+     *     "commentName": "",
      *     "commentURL": "", // optional
      *     "isReply": boolean,
      *     "article": {},

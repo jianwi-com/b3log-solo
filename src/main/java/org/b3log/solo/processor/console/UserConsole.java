@@ -20,7 +20,7 @@ package org.b3log.solo.processor.console;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Role;
@@ -38,6 +38,7 @@ import org.b3log.solo.model.Option;
 import org.b3log.solo.service.PreferenceQueryService;
 import org.b3log.solo.service.UserMgmtService;
 import org.b3log.solo.service.UserQueryService;
+import org.b3log.solo.util.Solos;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -162,7 +163,7 @@ public class UserConsole {
         renderer.setJSONObject(ret);
 
         try {
-            if (userQueryService.isAdminLoggedIn(request)) { // if the administrator register a new user, treats the new user as a normal user
+            if (Solos.isAdminLoggedIn(request)) { // if the administrator register a new user, treats the new user as a normal user
                 // (defaultRole) who could post article
                 requestJSONObject.put(User.USER_ROLE, Role.DEFAULT_ROLE);
             } else {

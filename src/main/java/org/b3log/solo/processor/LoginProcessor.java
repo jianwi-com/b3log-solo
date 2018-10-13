@@ -22,7 +22,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
@@ -45,7 +45,6 @@ import org.b3log.solo.SoloServletListener;
 import org.b3log.solo.model.Common;
 import org.b3log.solo.model.Option;
 import org.b3log.solo.processor.console.ConsoleRenderer;
-import org.b3log.solo.service.DataModelService;
 import org.b3log.solo.repository.OptionRepository;
 import org.b3log.solo.service.*;
 import org.b3log.solo.util.Solos;
@@ -65,7 +64,7 @@ import java.util.Map;
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="mailto:dongxu.wang@acm.org">Dongxu Wang</a>
  * @author <a href="https://github.com/nanolikeyou">nanolikeyou</a>
- * @version 1.1.1.13, Sep 16, 2018
+ * @version 1.1.1.14, Oct 5, 2018
  * @since 0.3.1
  */
 @RequestProcessor
@@ -147,10 +146,7 @@ public class LoginProcessor {
         }
 
         final HttpServletResponse response = context.getResponse();
-
-        userMgmtService.tryLogInWithCookie(request, response);
-
-        if (null != userQueryService.getCurrentUser(request)) { // User has already logged in
+        if (null != Solos.getCurrentUser(request, response)) { // User has already logged in
             response.sendRedirect(destinationURL);
 
             return;

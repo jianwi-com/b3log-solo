@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.b3log.solo.repository.impl;
+package org.b3log.solo.repository;
 
 import org.b3log.latke.Keys;
 import org.b3log.latke.model.Role;
@@ -26,14 +26,13 @@ import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.solo.AbstractTestCase;
 import org.b3log.solo.model.UserExt;
-import org.b3log.solo.repository.UserRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * {@link UserRepositoryImpl} test case.
+ * {@link UserRepository} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.0.2, Oct 17, 2015
@@ -43,7 +42,7 @@ public final class UserRepositoryImplTestCase extends AbstractTestCase {
 
     /**
      * Tests.
-     * 
+     *
      * @throws Exception exception
      */
     @Test
